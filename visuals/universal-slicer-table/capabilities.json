@@ -1,0 +1,105 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Filter key",
+      "name": "filterKey",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Display columns",
+      "name": "displayColumn",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Sort key",
+      "name": "sortKey",
+      "kind": "Grouping"
+    }
+  ],
+  "objects": {
+    "general": {
+      "displayName": "General",
+      "properties": {
+        "filter": {
+          "type": {
+            "filter": true
+          }
+        }
+      }
+    },
+    "style": {
+      "displayName": "Style",
+      "properties": {
+        "fontFamily": {
+          "displayName": "Font family",
+          "type": {
+            "formatting": {
+              "fontFamily": true
+            }
+          }
+        },
+        "fontSize": {
+          "displayName": "Font size",
+          "type": {
+            "numeric": true
+          }
+        },
+        "headerFontSize": {
+          "displayName": "Header font size",
+          "type": {
+            "numeric": true
+          }
+        },
+        "rowMinHeight": {
+          "displayName": "Row min height",
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "filterKey": {
+            "max": 1
+          },
+          "sortKey": {
+            "max": 1
+          }
+        }
+      ],
+      "table": {
+        "rows": {
+          "select": [
+            {
+              "for": {
+                "in": "filterKey"
+              }
+            },
+            {
+              "for": {
+                "in": "displayColumn"
+              }
+            },
+            {
+              "for": {
+                "in": "sortKey"
+              }
+            }
+          ],
+          "dataReductionAlgorithm": {
+            "top": {
+              "count": 30000
+            }
+          }
+        }
+      }
+    }
+  ],
+  "privileges": [],
+  "supportsSynchronizingFilterState": true,
+  "supportsKeyboardFocus": true
+}

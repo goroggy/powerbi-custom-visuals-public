@@ -1,0 +1,103 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Text",
+      "name": "text",
+      "kind": "Measure"
+    }
+  ],
+  "objects": {
+    "style": {
+      "displayName": "Style",
+      "properties": {
+        "fontFamily": {
+          "displayName": "Font family",
+          "type": {
+            "formatting": {
+              "fontFamily": true
+            }
+          }
+        },
+        "fontSize": {
+          "displayName": "Font size",
+          "type": {
+            "numeric": true
+          }
+        },
+        "lineHeight": {
+          "displayName": "Line height",
+          "type": {
+            "numeric": true
+          }
+        },
+        "padding": {
+          "displayName": "Padding",
+          "type": {
+            "numeric": true
+          }
+        },
+        "centerText": {
+          "displayName": "Center text",
+          "type": {
+            "bool": true
+          }
+        },
+        "rightAlign": {
+          "displayName": "Right align",
+          "type": {
+            "bool": true
+          }
+        },
+        "textColor": {
+          "displayName": "Text color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "backgroundColor": {
+          "displayName": "Background color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "text": {
+            "max": 1
+          }
+        }
+      ],
+      "table": {
+        "rows": {
+          "select": [
+            {
+              "for": {
+                "in": "text"
+              }
+            }
+          ],
+          "dataReductionAlgorithm": {
+            "top": {
+              "count": 1
+            }
+          }
+        }
+      }
+    }
+  ],
+  "privileges": [],
+  "supportsKeyboardFocus": true
+}

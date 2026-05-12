@@ -1,0 +1,152 @@
+.publication-slicer-table {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: #222;
+  font-family: var(--pst-font-family, "Segoe UI"), "Segoe UI", Arial, sans-serif;
+  font-size: var(--pst-font-size, 14px);
+  background: #fff;
+}
+
+.publication-slicer-table * {
+  box-sizing: border-box;
+}
+
+.pst-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 4px;
+  align-items: center;
+  min-height: 30px;
+  padding: 3px 4px;
+  border-bottom: 1px solid #9da3a6;
+  background: #f8fafb;
+}
+
+.pst-search {
+  min-width: 0;
+  height: 22px;
+  padding: 2px 7px;
+  border: 1px solid #b8c3ca;
+  border-radius: 0;
+  color: #222;
+  font: inherit;
+}
+
+.pst-button {
+  height: 22px;
+  min-width: 24px;
+  padding: 0 6px;
+  border: 1px solid #b8c3ca;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pst-button:hover {
+  background: #eef4f7;
+}
+
+.pst-count {
+  min-width: 44px;
+  color: #555;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pst-grid {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pst-header,
+.pst-row {
+  display: grid;
+  column-gap: 0;
+  align-items: stretch;
+}
+
+.pst-header {
+  flex: 0 0 auto;
+  border-bottom: 1px solid #777;
+  background: #f2f5f6;
+  color: #444;
+  font-size: var(--pst-header-font-size, 13px);
+  font-weight: 600;
+}
+
+.pst-header-cell {
+  min-width: 0;
+  padding: 4px 6px;
+  border-right: 1px solid #d0d5d8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pst-header-cell:first-child {
+  cursor: default;
+}
+
+.pst-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pst-row {
+  min-height: var(--pst-row-min-height, 32px);
+  border-bottom: 1px solid #e1e5e8;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pst-row:nth-child(even) {
+  background: #fbfcfd;
+}
+
+.pst-row:hover {
+  background: #eef6fb;
+}
+
+.pst-row.is-selected {
+  background: #fff1a8;
+  box-shadow: inset 3px 0 0 #222;
+}
+
+.pst-cell {
+  min-width: 0;
+  padding: 4px 6px;
+  border-right: 1px solid #edf0f2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.pst-check {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+}
+
+.pst-check input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+}
+
+.pst-empty {
+  padding: 10px;
+  color: #666;
+}

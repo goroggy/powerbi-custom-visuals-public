@@ -1,0 +1,26 @@
+{
+  "visual": {
+    "name": "scrollableText",
+    "displayName": "Scrollable Text",
+    "guid": "scrollableTextF2A3B4C5D6E7F8091A2B3C4D5E6F7081",
+    "visualClassName": "Visual",
+    "version": "0.1.8.0",
+    "description": "Scrollable text box for long measure or column text.",
+    "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals/issues",
+    "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals/tree/main/visuals/scrollable-text"
+  },
+  "apiVersion": "5.3.0",
+  "author": {
+    "name": "György Görög",
+    "email": "dev@example.local"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": null,
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": [],
+  "version": "0.1.8.0"
+}
