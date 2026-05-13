@@ -10,7 +10,7 @@ A table-like slicer with a separate filter key and configurable display columns.
 
 Current package:
 
-- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.7.1.0.pbiviz`
+- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.8.0.0.pbiviz`
 
 Source:
 

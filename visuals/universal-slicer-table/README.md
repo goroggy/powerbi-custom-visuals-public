@@ -13,7 +13,8 @@ Table-like slicer for Power BI with a separate filter key and configurable displ
 - Table layout with multiple display columns
 - Quick search
 - Clickable header sorting
-- Multi-select checkbox rows
+- Single-select checkbox rows by default
+- Optional multi-select mode
 - Applies a Power BI basic filter using the filter key
 - Font family, font size, header font size, and row height settings
 

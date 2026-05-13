@@ -55,6 +55,12 @@
           "type": {
             "numeric": true
           }
+        },
+        "allowMultiSelect": {
+          "displayName": "Allow multi-select",
+          "type": {
+            "bool": true
+          }
         }
       }
     }
