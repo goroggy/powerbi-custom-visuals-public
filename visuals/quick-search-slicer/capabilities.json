@@ -1,0 +1,97 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Field",
+      "name": "category",
+      "kind": "Grouping"
+    }
+  ],
+  "objects": {
+    "general": {
+      "displayName": "General",
+      "properties": {
+        "filter": {
+          "displayName": "Filter",
+          "type": {
+            "filter": true
+          }
+        }
+      }
+    },
+    "style": {
+      "displayName": "Style",
+      "properties": {
+        "fontFamily": {
+          "displayName": "Font family",
+          "type": {
+            "formatting": {
+              "fontFamily": true
+            }
+          }
+        },
+        "fontSize": {
+          "displayName": "Font size",
+          "type": {
+            "numeric": true
+          }
+        },
+        "rowHeight": {
+          "displayName": "Row height",
+          "type": {
+            "numeric": true
+          }
+        },
+        "allowMultiSelect": {
+          "displayName": "Allow multi-select",
+          "type": {
+            "bool": true
+          }
+        },
+        "applySearchWhileTyping": {
+          "displayName": "Search while typing",
+          "type": {
+            "bool": true
+          }
+        },
+        "showCounts": {
+          "displayName": "Show counts",
+          "type": {
+            "bool": true
+          }
+        },
+        "searchPlaceholder": {
+          "displayName": "Search placeholder",
+          "type": {
+            "text": true
+          }
+        }
+      }
+    }
+  },
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "category": {
+            "max": 1
+          }
+        }
+      ],
+      "categorical": {
+        "categories": {
+          "for": {
+            "in": "category"
+          },
+          "dataReductionAlgorithm": {
+            "top": {
+              "count": 30000
+            }
+          }
+        }
+      }
+    }
+  ],
+  "privileges": [],
+  "supportsSynchronizingFilterState": true,
+  "supportsKeyboardFocus": true
+}

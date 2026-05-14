@@ -4,6 +4,18 @@ Small Power BI custom visuals by György Görög.
 
 ## Visuals
 
+### Quick Search Slicer
+
+A compact slicer that combines free-text contains search with a regular value list.
+
+Current package:
+
+- `artifacts/quickSearchSlicerA1B2C3D4E5F60718293A4B5C6D7E8F91.0.1.4.0.pbiviz`
+
+Source:
+
+- `visuals/quick-search-slicer`
+
 ### Universal Slicer Table
 
 A table-like slicer with a separate filter key and configurable display columns. It is useful when a normal slicer is too cramped, but a table visual is not acceptable because row selection must behave like a slicer filter.
@@ -33,7 +45,11 @@ Source:
 Each visual is a standalone Power BI custom visual project.
 
 ```powershell
-cd visuals/scrollable-text
+cd visuals/quick-search-slicer
+npm install
+npm run package
+
+cd ../scrollable-text
 npm install
 npm run package
 

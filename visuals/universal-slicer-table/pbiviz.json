@@ -6,8 +6,8 @@
     "visualClassName": "Visual",
     "version": "0.8.0.0",
     "description": "Table-like slicer with a separate filter key and configurable display columns.",
-    "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals/issues",
-    "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals/tree/main/visuals/universal-slicer-table"
+    "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/issues",
+    "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/tree/main/visuals/universal-slicer-table"
   },
   "apiVersion": "5.3.0",
   "author": {
