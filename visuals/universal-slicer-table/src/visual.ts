@@ -65,6 +65,8 @@ export class Visual implements IVisual {
   private sortColumnIndex: number | undefined;
   private sortDescending = false;
   private searchText = "";
+  private pendingFilterValue: string | undefined;
+  private filterApplyTimer: number | undefined;
   private settings: VisualSettings = {
     fontFamily: "Segoe UI",
     fontSize: 14,
@@ -487,19 +489,35 @@ export class Visual implements IVisual {
       return;
     }
 
+    if (this.filterApplyTimer !== undefined) {
+      window.clearTimeout(this.filterApplyTimer);
+      this.filterApplyTimer = undefined;
+    }
+
     if (this.selectedKeys.size === 0) {
+      this.pendingFilterValue = undefined;
       this.host.applyJsonFilter(null, "general", "filter", FilterAction.remove);
       return;
     }
+
+    const selectedValue = Array.from(this.selectedKeys)[0];
+    this.selectedKeys.clear();
+    this.selectedKeys.add(selectedValue);
+    this.pendingFilterValue = selectedValue;
 
     const filter: BasicInFilter = {
       $schema: "https://powerbi.com/product/schema#basic",
       target,
       operator: "In",
-      values: [Array.from(this.selectedKeys)[0]],
+      values: [selectedValue],
       filterType: 1
     };
-    this.host.applyJsonFilter(filter, "general", "filter", FilterAction.merge);
+
+    this.host.applyJsonFilter(null, "general", "filter", FilterAction.remove);
+    this.filterApplyTimer = window.setTimeout(() => {
+      this.host.applyJsonFilter(filter, "general", "filter", FilterAction.merge);
+      this.filterApplyTimer = undefined;
+    }, 0);
   }
 
   private currentTarget(): FilterTarget | undefined {
@@ -524,7 +542,7 @@ export class Visual implements IVisual {
       return;
     }
 
-    const selected = new Set<string>();
+    const selected: string[] = [];
     for (const filter of filters as any[]) {
       if (!filter || filter.operator !== "In" || !Array.isArray(filter.values)) {
         continue;
@@ -532,14 +550,17 @@ export class Visual implements IVisual {
       const filterTarget = filter.target;
       if (filterTarget && filterTarget.table === target.table && filterTarget.column === target.column) {
         for (const value of filter.values) {
-          selected.add(String(value));
+          selected.push(String(value));
         }
       }
     }
     this.selectedKeys.clear();
-    const first = selected.values().next();
-    if (!first.done) {
-      this.selectedKeys.add(first.value);
+    const selectedValue = selected.length > 0 ? selected[selected.length - 1] : this.pendingFilterValue;
+    if (selectedValue) {
+      this.selectedKeys.add(selectedValue);
+      if (selected.length > 0) {
+        this.pendingFilterValue = undefined;
+      }
     }
   }
 }
