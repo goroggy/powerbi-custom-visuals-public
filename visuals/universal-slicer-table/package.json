@@ -1,7 +1,7 @@
 {
   "name": "universal-slicer-table",
   "description": "Table-like Power BI slicer with a separate filter key",
-  "version": "0.8.0.0",
+  "version": "0.8.1.0",
   "license": "Unlicense",
   "scripts": {
     "pbiviz": "pbiviz",

@@ -47,7 +47,6 @@ interface VisualSettings {
   fontSize: number;
   headerFontSize: number;
   rowMinHeight: number;
-  allowMultiSelect: boolean;
 }
 
 export class Visual implements IVisual {
@@ -70,8 +69,7 @@ export class Visual implements IVisual {
     fontFamily: "Segoe UI",
     fontSize: 14,
     headerFontSize: 13,
-    rowMinHeight: 32,
-    allowMultiSelect: false
+    rowMinHeight: 32
   };
 
   constructor(options: VisualConstructorOptions) {
@@ -145,8 +143,7 @@ export class Visual implements IVisual {
           fontFamily: this.settings.fontFamily,
           fontSize: this.settings.fontSize,
           headerFontSize: this.settings.headerFontSize,
-          rowMinHeight: this.settings.rowMinHeight,
-          allowMultiSelect: this.settings.allowMultiSelect
+          rowMinHeight: this.settings.rowMinHeight
         }
       }
     ];
@@ -166,8 +163,7 @@ export class Visual implements IVisual {
                 this.fontFamilySlice("fontFamily", "Font family", this.settings.fontFamily),
                 this.numericSlice("fontSize", "Font size", this.settings.fontSize),
                 this.numericSlice("headerFontSize", "Header font size", this.settings.headerFontSize),
-                this.numericSlice("rowMinHeight", "Row min height", this.settings.rowMinHeight),
-                this.toggleSlice("allowMultiSelect", "Allow multi-select", this.settings.allowMultiSelect)
+                this.numericSlice("rowMinHeight", "Row min height", this.settings.rowMinHeight)
               ]
             }
           ],
@@ -175,8 +171,7 @@ export class Visual implements IVisual {
             { objectName: "style", propertyName: "fontFamily" },
             { objectName: "style", propertyName: "fontSize" },
             { objectName: "style", propertyName: "headerFontSize" },
-            { objectName: "style", propertyName: "rowMinHeight" },
-            { objectName: "style", propertyName: "allowMultiSelect" }
+            { objectName: "style", propertyName: "rowMinHeight" }
           ]
         }
       ]
@@ -189,8 +184,7 @@ export class Visual implements IVisual {
       fontFamily: this.objectString(objects, "style", "fontFamily", "Segoe UI"),
       fontSize: this.objectNumber(objects, "style", "fontSize", 14),
       headerFontSize: this.objectNumber(objects, "style", "headerFontSize", 13),
-      rowMinHeight: this.objectNumber(objects, "style", "rowMinHeight", 32),
-      allowMultiSelect: this.objectBool(objects, "style", "allowMultiSelect", false)
+      rowMinHeight: this.objectNumber(objects, "style", "rowMinHeight", 32)
     };
   }
 
@@ -212,16 +206,6 @@ export class Visual implements IVisual {
   ): string {
     const value = objects && objects[objectName] && objects[objectName][propertyName] as any;
     return typeof value === "string" && value.trim() ? value : defaultValue;
-  }
-
-  private objectBool(
-    objects: DataViewObjects | undefined,
-    objectName: string,
-    propertyName: string,
-    defaultValue: boolean
-  ): boolean {
-    const value = objects && objects[objectName] && objects[objectName][propertyName] as any;
-    return typeof value === "boolean" ? value : defaultValue;
   }
 
   private applySettings(): void {
@@ -254,23 +238,6 @@ export class Visual implements IVisual {
       displayName,
       control: {
         type: "FontPicker",
-        properties: {
-          descriptor: {
-            objectName: "style",
-            propertyName: name
-          },
-          value
-        }
-      }
-    } as powerbi.visuals.FormattingSlice;
-  }
-
-  private toggleSlice(name: string, displayName: string, value: boolean): powerbi.visuals.FormattingSlice {
-    return {
-      uid: `style_${name}`,
-      displayName,
-      control: {
-        type: "ToggleSwitch",
         properties: {
           descriptor: {
             objectName: "style",
@@ -507,9 +474,7 @@ export class Visual implements IVisual {
     if (this.selectedKeys.has(key)) {
       this.selectedKeys.delete(key);
     } else {
-      if (!this.settings.allowMultiSelect) {
-        this.selectedKeys.clear();
-      }
+      this.selectedKeys.clear();
       this.selectedKeys.add(key);
     }
     this.applySelectionFilter();
@@ -531,7 +496,7 @@ export class Visual implements IVisual {
       $schema: "https://powerbi.com/product/schema#basic",
       target,
       operator: "In",
-      values: Array.from(this.selectedKeys),
+      values: [Array.from(this.selectedKeys)[0]],
       filterType: 1
     };
     this.host.applyJsonFilter(filter, "general", "filter", FilterAction.merge);
@@ -572,13 +537,9 @@ export class Visual implements IVisual {
       }
     }
     this.selectedKeys.clear();
-    if (this.settings.allowMultiSelect) {
-      selected.forEach(value => this.selectedKeys.add(value));
-    } else {
-      const first = selected.values().next();
-      if (!first.done) {
-        this.selectedKeys.add(first.value);
-      }
+    const first = selected.values().next();
+    if (!first.done) {
+      this.selectedKeys.add(first.value);
     }
   }
 }
