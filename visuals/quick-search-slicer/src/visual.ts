@@ -584,7 +584,6 @@ export class Visual implements IVisual {
     if (hasSelectionFilter) {
       this.selectedValues.clear();
       selected.forEach(value => this.selectedValues.add(value));
-      this.searchText = "";
     }
     if (!hasSelectionFilter && hasSearchFilter) {
       this.searchText = search;

@@ -4,7 +4,7 @@
     "displayName": "Quick Search Slicer",
     "guid": "quickSearchSlicerA1B2C3D4E5F60718293A4B5C6D7E8F91",
     "visualClassName": "Visual",
-    "version": "0.1.8.0",
+    "version": "0.1.9.0",
     "description": "Combined Power BI slicer with a contains-search input and a regular value slicer list.",
     "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/issues",
     "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/tree/main/visuals/quick-search-slicer"
@@ -22,5 +22,5 @@
   "capabilities": "capabilities.json",
   "dependencies": null,
   "stringResources": [],
-  "version": "0.1.8.0"
+  "version": "0.1.9.0"
 }
