@@ -12,6 +12,7 @@
       "properties": {
         "filter": {
           "displayName": "Filter",
+          "filterState": true,
           "type": {
             "filter": true
           }
@@ -55,6 +56,12 @@
         },
         "showCounts": {
           "displayName": "Show counts",
+          "type": {
+            "bool": true
+          }
+        },
+        "showSearchBar": {
+          "displayName": "Show search bar",
           "type": {
             "bool": true
           }

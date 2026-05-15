@@ -1,7 +1,7 @@
 {
   "name": "quick-search-slicer",
   "description": "Combined Power BI slicer with a contains-search input and a regular value slicer list",
-  "version": "0.1.4.0",
+  "version": "0.1.8.0",
   "license": "Unlicense",
   "scripts": {
     "pbiviz": "pbiviz",

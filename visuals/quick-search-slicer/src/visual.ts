@@ -51,8 +51,12 @@ interface VisualSettings {
   allowMultiSelect: boolean;
   applySearchWhileTyping: boolean;
   showCounts: boolean;
+  showSearchBar: boolean;
   searchPlaceholder: string;
 }
+
+const CLEAR_CUSTOM_SLICERS_EVENT = "pbiCustomVisuals:clearSlicers";
+const CLEAR_CUSTOM_SLICERS_STORAGE_KEY = "pbiCustomVisuals.clearSlicers";
 
 export class Visual implements IVisual {
   private readonly host: IVisualHost;
@@ -70,6 +74,12 @@ export class Visual implements IVisual {
   private targetKey = "";
   private searchText = "";
   private searchTimer: number | undefined;
+  private readonly globalClearHandler = () => this.clearAllState();
+  private readonly storageClearHandler = (event: StorageEvent) => {
+    if (event.key === CLEAR_CUSTOM_SLICERS_STORAGE_KEY) {
+      this.clearAllState();
+    }
+  };
   private settings: VisualSettings = {
     fontFamily: "Segoe UI",
     fontSize: 13,
@@ -77,6 +87,7 @@ export class Visual implements IVisual {
     allowMultiSelect: true,
     applySearchWhileTyping: true,
     showCounts: false,
+    showSearchBar: true,
     searchPlaceholder: "Search"
   };
 
@@ -136,6 +147,14 @@ export class Visual implements IVisual {
     this.list = document.createElement("div");
     this.list.className = "qss-list";
     this.root.appendChild(this.list);
+
+    window.addEventListener(CLEAR_CUSTOM_SLICERS_EVENT, this.globalClearHandler);
+    window.addEventListener("storage", this.storageClearHandler);
+  }
+
+  public destroy(): void {
+    window.removeEventListener(CLEAR_CUSTOM_SLICERS_EVENT, this.globalClearHandler);
+    window.removeEventListener("storage", this.storageClearHandler);
   }
 
   public update(options: VisualUpdateOptions): void {
@@ -165,6 +184,7 @@ export class Visual implements IVisual {
           allowMultiSelect: this.settings.allowMultiSelect,
           applySearchWhileTyping: this.settings.applySearchWhileTyping,
           showCounts: this.settings.showCounts,
+          showSearchBar: this.settings.showSearchBar,
           searchPlaceholder: this.settings.searchPlaceholder
         }
       }
@@ -188,6 +208,7 @@ export class Visual implements IVisual {
                 this.toggleSlice("allowMultiSelect", "Allow multi-select", this.settings.allowMultiSelect),
                 this.toggleSlice("applySearchWhileTyping", "Search while typing", this.settings.applySearchWhileTyping),
                 this.toggleSlice("showCounts", "Show counts", this.settings.showCounts),
+                this.toggleSlice("showSearchBar", "Show search bar", this.settings.showSearchBar),
                 this.textSlice("searchPlaceholder", "Search placeholder", this.settings.searchPlaceholder)
               ]
             }
@@ -199,6 +220,7 @@ export class Visual implements IVisual {
             { objectName: "style", propertyName: "allowMultiSelect" },
             { objectName: "style", propertyName: "applySearchWhileTyping" },
             { objectName: "style", propertyName: "showCounts" },
+            { objectName: "style", propertyName: "showSearchBar" },
             { objectName: "style", propertyName: "searchPlaceholder" }
           ]
         }
@@ -215,6 +237,7 @@ export class Visual implements IVisual {
       allowMultiSelect: this.objectBool(objects, "style", "allowMultiSelect", true),
       applySearchWhileTyping: this.objectBool(objects, "style", "applySearchWhileTyping", true),
       showCounts: this.objectBool(objects, "style", "showCounts", false),
+      showSearchBar: this.objectBool(objects, "style", "showSearchBar", true),
       searchPlaceholder: this.objectString(objects, "style", "searchPlaceholder", "Search")
     };
   }
@@ -253,6 +276,7 @@ export class Visual implements IVisual {
     this.root.style.setProperty("--qss-font-family", this.settings.fontFamily);
     this.root.style.setProperty("--qss-font-size", `${this.settings.fontSize}px`);
     this.root.style.setProperty("--qss-row-height", `${this.settings.rowHeight}px`);
+    this.root.classList.toggle("qss-hide-searchbar", !this.settings.showSearchBar);
     this.searchInput.placeholder = this.settings.searchPlaceholder;
   }
 
@@ -460,6 +484,18 @@ export class Visual implements IVisual {
     this.render();
   }
 
+  private clearAllState(): void {
+    if (this.searchTimer !== undefined) {
+      window.clearTimeout(this.searchTimer);
+      this.searchTimer = undefined;
+    }
+    this.selectedValues.clear();
+    this.searchText = "";
+    this.searchInput.value = "";
+    this.applyActiveFilter();
+    this.render();
+  }
+
   private applyActiveFilter(): void {
     const target = this.currentTarget();
     if (!target) {
@@ -552,6 +588,10 @@ export class Visual implements IVisual {
     }
     if (!hasSelectionFilter && hasSearchFilter) {
       this.searchText = search;
+    }
+    if (!hasSelectionFilter && !hasSearchFilter) {
+      this.selectedValues.clear();
+      this.searchText = "";
     }
   }
 

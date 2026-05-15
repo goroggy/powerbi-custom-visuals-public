@@ -49,6 +49,9 @@ interface VisualSettings {
   rowMinHeight: number;
 }
 
+const CLEAR_CUSTOM_SLICERS_EVENT = "pbiCustomVisuals:clearSlicers";
+const CLEAR_CUSTOM_SLICERS_STORAGE_KEY = "pbiCustomVisuals.clearSlicers";
+
 export class Visual implements IVisual {
   private readonly host: IVisualHost;
   private readonly root: HTMLDivElement;
@@ -67,6 +70,12 @@ export class Visual implements IVisual {
   private searchText = "";
   private pendingFilterValue: string | undefined;
   private filterApplyTimer: number | undefined;
+  private readonly globalClearHandler = () => this.clearAllState();
+  private readonly storageClearHandler = (event: StorageEvent) => {
+    if (event.key === CLEAR_CUSTOM_SLICERS_STORAGE_KEY) {
+      this.clearAllState();
+    }
+  };
   private settings: VisualSettings = {
     fontFamily: "Segoe UI",
     fontSize: 14,
@@ -97,11 +106,7 @@ export class Visual implements IVisual {
     this.clearButton.className = "pst-button";
     this.clearButton.type = "button";
     this.clearButton.textContent = "Clear";
-    this.clearButton.addEventListener("click", () => {
-      this.selectedKeys.clear();
-      this.applySelectionFilter();
-      this.renderRows();
-    });
+    this.clearButton.addEventListener("click", () => this.clearAllState());
     toolbar.appendChild(this.clearButton);
 
     this.countLabel = document.createElement("span");
@@ -120,6 +125,14 @@ export class Visual implements IVisual {
     this.body.className = "pst-body";
     grid.appendChild(this.body);
     this.root.appendChild(grid);
+
+    window.addEventListener(CLEAR_CUSTOM_SLICERS_EVENT, this.globalClearHandler);
+    window.addEventListener("storage", this.storageClearHandler);
+  }
+
+  public destroy(): void {
+    window.removeEventListener(CLEAR_CUSTOM_SLICERS_EVENT, this.globalClearHandler);
+    window.removeEventListener("storage", this.storageClearHandler);
   }
 
   public update(options: VisualUpdateOptions): void {
@@ -483,6 +496,19 @@ export class Visual implements IVisual {
     this.renderRows();
   }
 
+  private clearAllState(): void {
+    if (this.filterApplyTimer !== undefined) {
+      window.clearTimeout(this.filterApplyTimer);
+      this.filterApplyTimer = undefined;
+    }
+    this.selectedKeys.clear();
+    this.pendingFilterValue = undefined;
+    this.searchText = "";
+    this.searchInput.value = "";
+    this.applySelectionFilter();
+    this.renderRows();
+  }
+
   private applySelectionFilter(): void {
     const target = this.currentTarget();
     if (!target) {
@@ -539,6 +565,8 @@ export class Visual implements IVisual {
     const target = this.currentTarget();
     if (!target) {
       this.selectedKeys.clear();
+      this.searchText = "";
+      this.searchInput.value = "";
       return;
     }
 
@@ -555,12 +583,13 @@ export class Visual implements IVisual {
       }
     }
     this.selectedKeys.clear();
-    const selectedValue = selected.length > 0 ? selected[selected.length - 1] : this.pendingFilterValue;
-    if (selectedValue) {
-      this.selectedKeys.add(selectedValue);
-      if (selected.length > 0) {
-        this.pendingFilterValue = undefined;
-      }
+    if (selected.length > 0) {
+      this.selectedKeys.add(selected[selected.length - 1]);
+      this.pendingFilterValue = undefined;
+    } else {
+      this.pendingFilterValue = undefined;
+      this.searchText = "";
+      this.searchInput.value = "";
     }
   }
 }

@@ -21,6 +21,7 @@
       "displayName": "General",
       "properties": {
         "filter": {
+          "filterState": true,
           "type": {
             "filter": true
           }
