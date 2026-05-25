@@ -40,6 +40,18 @@ Source:
 
 - `visuals/scrollable-text`
 
+### Text Filter (Lockable)
+
+A Microsoft Text Filter fork with a lock option. When locked, it keeps its filter even when report-level Clear All Slicers-style reset logic runs.
+
+Current package:
+
+- `artifacts/textFilterLockableEG7291A0B1C2D3E4F5.2.3.0.0.pbiviz`
+
+Source:
+
+- `visuals/text-filter-lockable`
+
 ## Build
 
 Each visual is a standalone Power BI custom visual project.
@@ -56,8 +68,12 @@ npm run package
 cd ../universal-slicer-table
 npm install
 npm run package
+
+cd ../text-filter-lockable
+npm install
+npm run package
 ```
 
 ## License
 
-Released under the Unlicense. See `LICENSE`.
+Original visuals in this repository are released under the Unlicense. Text Filter (Lockable) is a fork of Microsoft's Text Filter visual and carries its own MIT license in `visuals/text-filter-lockable/LICENSE`.

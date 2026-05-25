@@ -1,0 +1,26 @@
+{
+  "visual": {
+    "name": "textFilterLockable",
+    "displayName": "Text Filter (Lockable)",
+    "guid": "textFilterLockableEG7291A0B1C2D3E4F5",
+    "visualClassName": "Visual",
+    "version": "2.3.0.0",
+    "description": "Text filter with lock option - ignores Clear All Slicers when locked.",
+    "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/issues",
+    "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/tree/main/visuals/text-filter-lockable"
+  },
+  "output": "dist/textFilter.pbiviz",
+  "apiVersion": "5.3.0",
+  "author": {
+    "name": "Microsoft, modified by Gyorgy Gorog",
+    "email": "dev@example.local"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": null,
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}
