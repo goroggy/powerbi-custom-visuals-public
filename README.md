@@ -22,7 +22,7 @@ A table-like slicer with a separate filter key and configurable display columns.
 
 Current package:
 
-- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.8.0.0.pbiviz`
+- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.8.2.0.pbiviz`
 
 Source:
 
@@ -51,6 +51,17 @@ Current package:
 Source:
 
 - `visuals/text-filter-lockable`
+
+## Install
+
+The built packages are in `artifacts/`. To use one in Power BI Desktop:
+
+1. Open Power BI Desktop.
+2. In the **Visualizations** pane, choose **... (more options) → Import a visual from a file**.
+3. Select the `.pbiviz` from `artifacts/`.
+4. The visual appears in the Visualizations pane — use it like any built-in visual.
+
+Importing visuals from a file may need to be enabled under **File → Options and settings → Options → Security** (or by your Power BI admin).
 
 ## Build
 
