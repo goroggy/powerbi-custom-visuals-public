@@ -18,11 +18,11 @@ Source:
 
 ### Universal Slicer Table
 
-A table-like slicer with a separate filter key and configurable display columns. It is useful when a normal slicer is too cramped, but a table visual is not acceptable because row selection must behave like a slicer filter.
+A table-like slicer with a separate filter key and configurable display columns. It is useful when a normal slicer is too cramped, but a table visual is not acceptable because row selection must behave like a slicer filter. Column widths auto-fit to content (narrow icon columns, the longest text column absorbs the slack), and it supports text/background color, font family, and font sizes.
 
 Current package:
 
-- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.8.6.0.pbiviz`
+- `artifacts/publicationSlicerTableA1B2C3D4E5F60718293A4B5C6D7E8F90.0.8.7.0.pbiviz`
 
 Source:
 

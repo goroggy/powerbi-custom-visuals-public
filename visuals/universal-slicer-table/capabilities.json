@@ -31,6 +31,26 @@
     "style": {
       "displayName": "Style",
       "properties": {
+        "textColor": {
+          "displayName": "Text color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "backgroundColor": {
+          "displayName": "Background color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
         "fontFamily": {
           "displayName": "Font family",
           "type": {

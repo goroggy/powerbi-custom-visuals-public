@@ -19,7 +19,6 @@ type RoleName = "filterKey" | "displayColumn" | "sortKey";
 interface DisplayColumn {
   index: number;
   title: string;
-  track: string;
 }
 
 interface SlicerRow {
@@ -43,6 +42,8 @@ interface BasicInFilter {
 }
 
 interface VisualSettings {
+  textColor: string;
+  backgroundColor: string;
   fontFamily: string;
   fontSize: number;
   headerFontSize: number;
@@ -62,8 +63,12 @@ export class Visual implements IVisual {
   private readonly body: HTMLDivElement;
   private readonly selectedKeys = new Set<string>();
 
+  private readonly measureCanvas: HTMLCanvasElement = document.createElement("canvas");
+  private readonly measureCtx: CanvasRenderingContext2D | null = this.measureCanvas.getContext("2d");
+
   private rows: SlicerRow[] = [];
   private displayColumns: DisplayColumn[] = [];
+  private columnTracks: string[] = [];
   private filterColumn: DataViewMetadataColumn | undefined;
   private sortColumnIndex: number | undefined;
   private sortDescending = false;
@@ -77,6 +82,8 @@ export class Visual implements IVisual {
     }
   };
   private settings: VisualSettings = {
+    textColor: "#222222",
+    backgroundColor: "#ffffff",
     fontFamily: "Segoe UI",
     fontSize: 14,
     headerFontSize: 13,
@@ -140,6 +147,7 @@ export class Visual implements IVisual {
     this.settings = this.readSettings(dataView);
     this.applySettings();
     this.rows = this.readRows(dataView);
+    this.computeColumnTracks();
     this.syncSelectionFromFilters(options.jsonFilters || []);
     this.renderHeader();
     this.renderRows();
@@ -155,6 +163,8 @@ export class Visual implements IVisual {
         objectName: "style",
         selector: null as any,
         properties: {
+          textColor: { solid: { color: this.settings.textColor } },
+          backgroundColor: { solid: { color: this.settings.backgroundColor } },
           fontFamily: this.settings.fontFamily,
           fontSize: this.settings.fontSize,
           headerFontSize: this.settings.headerFontSize,
@@ -175,6 +185,8 @@ export class Visual implements IVisual {
               uid: "styleGroup",
               displayName: "Style",
               slices: [
+                this.colorSlice("textColor", "Text color", this.settings.textColor),
+                this.colorSlice("backgroundColor", "Background color", this.settings.backgroundColor),
                 this.fontFamilySlice("fontFamily", "Font family", this.settings.fontFamily),
                 this.numericSlice("fontSize", "Font size", this.settings.fontSize),
                 this.numericSlice("headerFontSize", "Header font size", this.settings.headerFontSize),
@@ -183,6 +195,8 @@ export class Visual implements IVisual {
             }
           ],
           revertToDefaultDescriptors: [
+            { objectName: "style", propertyName: "textColor" },
+            { objectName: "style", propertyName: "backgroundColor" },
             { objectName: "style", propertyName: "fontFamily" },
             { objectName: "style", propertyName: "fontSize" },
             { objectName: "style", propertyName: "headerFontSize" },
@@ -196,11 +210,24 @@ export class Visual implements IVisual {
   private readSettings(dataView?: DataView): VisualSettings {
     const objects = dataView && dataView.metadata && dataView.metadata.objects;
     return {
+      textColor: this.objectFill(objects, "style", "textColor", "#222222"),
+      backgroundColor: this.objectFill(objects, "style", "backgroundColor", "#ffffff"),
       fontFamily: this.objectString(objects, "style", "fontFamily", "Segoe UI"),
       fontSize: this.objectNumber(objects, "style", "fontSize", 14),
       headerFontSize: this.objectNumber(objects, "style", "headerFontSize", 13),
       rowMinHeight: this.objectNumber(objects, "style", "rowMinHeight", 32)
     };
+  }
+
+  private objectFill(
+    objects: DataViewObjects | undefined,
+    objectName: string,
+    propertyName: string,
+    defaultValue: string
+  ): string {
+    const value = objects && objects[objectName] && objects[objectName][propertyName] as any;
+    const color = value && value.solid && value.solid.color;
+    return typeof color === "string" && color ? color : defaultValue;
   }
 
   private objectNumber(
@@ -224,6 +251,8 @@ export class Visual implements IVisual {
   }
 
   private applySettings(): void {
+    this.root.style.setProperty("--pst-text-color", this.settings.textColor);
+    this.root.style.setProperty("--pst-bg-color", this.settings.backgroundColor);
     this.root.style.setProperty("--pst-font-family", this.settings.fontFamily);
     this.root.style.setProperty("--pst-font-size", `${this.settings.fontSize}px`);
     this.root.style.setProperty("--pst-header-font-size", `${this.settings.headerFontSize}px`);
@@ -264,6 +293,23 @@ export class Visual implements IVisual {
     } as powerbi.visuals.FormattingSlice;
   }
 
+  private colorSlice(name: string, displayName: string, value: string): powerbi.visuals.FormattingSlice {
+    return {
+      uid: `style_${name}`,
+      displayName,
+      control: {
+        type: "ColorPicker",
+        properties: {
+          descriptor: {
+            objectName: "style",
+            propertyName: name
+          },
+          value: { value }
+        }
+      }
+    } as powerbi.visuals.FormattingSlice;
+  }
+
   private readRows(dataView?: DataView): SlicerRow[] {
     const table = dataView && dataView.table;
     if (!table || !table.columns || !table.rows) {
@@ -284,8 +330,7 @@ export class Visual implements IVisual {
     const sortKeyIndex = this.roleIndex(columns, "sortKey");
     this.displayColumns = this.roleIndexes(columns, "displayColumn").map(index => ({
       index,
-      title: this.columnTitle(columns[index]),
-      track: this.columnTrack(columns[index])
+      title: this.columnTitle(columns[index])
     }));
 
     const rows: SlicerRow[] = [];
@@ -326,24 +371,55 @@ export class Visual implements IVisual {
     return column.displayName || column.queryName || "";
   }
 
-  private columnTrack(column: DataViewMetadataColumn): string {
-    const name = `${column.displayName || ""} ${column.queryName || ""}`.toLocaleLowerCase();
-    if (name.includes("title") || name.includes("abstract")) {
-      return "minmax(240px, 4fr)";
-    }
-    if (name.includes("year")) {
-      return "52px";
-    }
-    if (name.includes("lang")) {
-      return "42px";
-    }
-    if (name.includes("source")) {
-      return "70px";
-    }
-    if (name.includes("compound") || name.includes("target")) {
-      return "minmax(120px, 1.4fr)";
-    }
-    return "minmax(90px, 1fr)";
+  // Auto-fit column widths from actual content (universal, not name-based).
+  // Icon/short columns get a tight fixed track; text columns flex proportionally
+  // to their natural width so the longest content absorbs the slack.
+  private computeColumnTracks(): void {
+    const ctx = this.measureCtx;
+    const family = this.settings.fontFamily || "Segoe UI";
+    const cellFont = `${this.settings.fontSize}px ${family}`;
+    const headerFont = `600 ${this.settings.headerFontSize}px ${family}`;
+
+    const MIN = 28;          // smallest a column may be
+    const MAX = 320;         // cap so one long column can't dominate
+    const ICON_CONTENT = 24; // content <= this px => treat as an icon column
+    const ICON_MAX = 48;     // natural <= this px => fixed (non-flex) track
+    const CELL_PAD = 14;     // cell horizontal padding + border + slack
+    const ARROW = 14;        // header sort-arrow allowance
+
+    this.columnTracks = this.displayColumns.map((column, i) => {
+      // Widest cell by string length, then measured once (cheap for big tables).
+      let longest = "";
+      for (const row of this.rows) {
+        const text = row.cells[i] || "";
+        if (text.length > longest.length) {
+          longest = text;
+        }
+      }
+
+      let contentWidth = 0;
+      let headerWidth = MIN;
+      if (ctx) {
+        ctx.font = cellFont;
+        contentWidth = this.rows.length ? ctx.measureText(longest).width : 0;
+        ctx.font = headerFont;
+        headerWidth = ctx.measureText(column.title).width + ARROW;
+      }
+
+      let natural: number;
+      if (contentWidth > 0 && contentWidth <= ICON_CONTENT) {
+        // Icon column: stay narrow, let the (longer) header ellipsize.
+        natural = contentWidth + 12;
+      } else {
+        natural = Math.max(contentWidth, Math.min(headerWidth, MAX)) + CELL_PAD;
+      }
+      natural = Math.round(Math.min(MAX, Math.max(MIN, natural)));
+
+      if (natural <= ICON_MAX) {
+        return `${natural}px`;
+      }
+      return `minmax(${Math.min(natural, 140)}px, ${natural}fr)`;
+    });
   }
 
   private text(value: PrimitiveValue): string {
@@ -482,7 +558,7 @@ export class Visual implements IVisual {
   }
 
   private gridTemplate(): string {
-    return `24px ${this.displayColumns.map(column => column.track).join(" ")}`;
+    return `24px ${this.columnTracks.join(" ")}`;
   }
 
   private toggleRow(key: string): void {
