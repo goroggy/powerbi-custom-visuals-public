@@ -52,6 +52,18 @@ Source:
 
 - `visuals/text-filter-lockable`
 
+### Radial Clock
+
+An analog wall clock for dashboards. It needs no data and no DAX measure — it shows the report viewer's local time (daylight saving handled by the browser). Format options: size in pixels (no auto-fit), face color, frame/hands color, second-hand color.
+
+Current package:
+
+- `artifacts/radialClockA1B2C3D4E5F60718293A4B5C6D7E8F92.1.0.0.0.pbiviz`
+
+Source:
+
+- `visuals/radial-clock`
+
 ## Install
 
 The built packages are in `artifacts/`. To use one in Power BI Desktop:
@@ -81,6 +93,10 @@ npm install
 npm run package
 
 cd ../text-filter-lockable
+npm install
+npm run package
+
+cd ../radial-clock
 npm install
 npm run package
 ```

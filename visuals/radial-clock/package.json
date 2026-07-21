@@ -1,0 +1,19 @@
+{
+  "name": "radial-clock",
+  "description": "Radial (analog) clock Power BI visual",
+  "version": "1.0.0.0",
+  "license": "Unlicense",
+  "scripts": {
+    "pbiviz": "pbiviz",
+    "start": "pbiviz start",
+    "package": "pbiviz package",
+    "lint": "npx eslint ."
+  },
+  "dependencies": {
+    "powerbi-visuals-api": "~5.3.0"
+  },
+  "devDependencies": {
+    "powerbi-visuals-tools": "^7.2.0",
+    "typescript": "5.5.4"
+  }
+}

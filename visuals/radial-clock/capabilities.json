@@ -1,0 +1,50 @@
+{
+  "dataRoles": [],
+  "dataViewMappings": [],
+  "privileges": [],
+  "objects": {
+    "clock": {
+      "displayName": "Clock",
+      "properties": {
+        "size": {
+          "displayName": "Size (px)",
+          "description": "Clock diameter in pixels. The clock does not auto-fit the container.",
+          "placeHolderText": "180",
+          "type": {
+            "numeric": true
+          }
+        },
+        "faceColor": {
+          "displayName": "Face color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "frameColor": {
+          "displayName": "Frame and hands color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "secondColor": {
+          "displayName": "Second hand color",
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
