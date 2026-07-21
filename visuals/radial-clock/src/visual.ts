@@ -122,6 +122,71 @@ export class Visual implements IVisual {
         return instances;
     }
 
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        return {
+            cards: [
+                {
+                    uid: "clockCard",
+                    displayName: "Clock",
+                    groups: [
+                        {
+                            uid: "clockGroup",
+                            displayName: "Clock",
+                            slices: [
+                                this.numericSlice("size", "Size (px)", this.settings.size),
+                                this.colorSlice("faceColor", "Face color", this.settings.faceColor),
+                                this.colorSlice("frameColor", "Frame and hands color", this.settings.frameColor),
+                                this.colorSlice("secondColor", "Second hand color", this.settings.secondColor)
+                            ]
+                        }
+                    ],
+                    revertToDefaultDescriptors: [
+                        { objectName: "clock", propertyName: "size" },
+                        { objectName: "clock", propertyName: "faceColor" },
+                        { objectName: "clock", propertyName: "frameColor" },
+                        { objectName: "clock", propertyName: "secondColor" }
+                    ]
+                }
+            ]
+        };
+    }
+
+    private numericSlice(name: string, displayName: string, value: number): powerbi.visuals.FormattingSlice {
+        return {
+            uid: `clock_${name}`,
+            displayName,
+            control: {
+                type: "NumUpDown",
+                properties: {
+                    descriptor: {
+                        objectName: "clock",
+                        propertyName: name
+                    },
+                    value
+                }
+            }
+        } as powerbi.visuals.FormattingSlice;
+    }
+
+    private colorSlice(name: string, displayName: string, value: string): powerbi.visuals.FormattingSlice {
+        return {
+            uid: `clock_${name}`,
+            displayName,
+            control: {
+                type: "ColorPicker",
+                properties: {
+                    descriptor: {
+                        objectName: "clock",
+                        propertyName: name
+                    },
+                    value: {
+                        value
+                    }
+                }
+            }
+        } as powerbi.visuals.FormattingSlice;
+    }
+
     private applyLayout(): void {
         const s = this.settings;
         const size = s.size;

@@ -4,7 +4,7 @@
     "displayName": "Radial Clock",
     "guid": "radialClockA1B2C3D4E5F60718293A4B5C6D7E8F92",
     "visualClassName": "Visual",
-    "version": "1.0.0.0",
+    "version": "1.0.1.0",
     "description": "Analog wall clock for dashboards. No data needed: it shows the report viewer's local time.",
     "supportUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/issues",
     "gitHubUrl": "https://github.com/goroggy/powerbi-custom-visuals-public/tree/main/visuals/radial-clock"
@@ -22,5 +22,5 @@
   "capabilities": "capabilities.json",
   "dependencies": null,
   "stringResources": [],
-  "version": "1.0.0.0"
+  "version": "1.0.1.0"
 }
